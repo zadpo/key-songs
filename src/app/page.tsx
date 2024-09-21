@@ -95,7 +95,7 @@ export default function Home() {
     <ProtectedRoute>
       <div className="container mx-auto py-6">
         <h1 className="text-3xl font-bold mb-6">Welcome to Key Songs</h1>
-
+        <p>You can see here</p>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
           <Card className="shadow-none">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
