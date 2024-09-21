@@ -14,14 +14,17 @@ export default function Login() {
   useEffect(() => {
     if (!loading && isAuthenticated) {
       router.push("/");
+    } else if (!loading) {
     }
   }, [isAuthenticated, loading, router]);
 
   const handleSubmit = (pin: string) => {
     if (login(pin)) {
+      console.log("Login successful"); // Log successful login
       router.push("/");
     } else {
       setError("Invalid PIN");
+      console.log("Invalid PIN entered"); // Log invalid PIN
     }
   };
 
