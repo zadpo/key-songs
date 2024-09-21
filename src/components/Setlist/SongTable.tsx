@@ -7,9 +7,20 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { Plus, Trash2, Eye, ChevronLeft, ChevronRight, Search } from "lucide-react";
+import {
+  Plus,
+  Trash2,
+  Eye,
+  ChevronLeft,
+  ChevronRight,
+  Search,
+  CheckCircle2,
+  AlertCircle,
+} from "lucide-react";
 import { ExtendedSong } from "@/types";
 import { Input } from "@/components/ui/input";
+import SongUploadDialog from "./SongUploadDialog";
+import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 
 interface SongTableProps {
   songs: ExtendedSong[];
@@ -21,6 +32,9 @@ interface SongTableProps {
 
 export default function SongTable({ songs, loading, onDelete, onAddDetails, onViewDetails }: SongTableProps) {
   const [currentPage, setCurrentPage] = useState(1);
+  const [open, setOpen] = useState(false);
+  const [success, setSuccess] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredSongs, setFilteredSongs] = useState<ExtendedSong[]>(songs);
   const itemsPerPage = 12;
@@ -56,6 +70,20 @@ export default function SongTable({ songs, loading, onDelete, onAddDetails, onVi
 
   return (
     <div className="space-y-4">
+      {success && (
+        <Alert variant="default" className="mb-4 bg-green-50 text-green-700 border-green-200">
+          <CheckCircle2 className="h-4 w-4" />
+          <AlertTitle>Success</AlertTitle>
+          <AlertDescription>{success}</AlertDescription>
+        </Alert>
+      )}
+      {error && (
+        <Alert variant="destructive" className="mb-4">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Error</AlertTitle>
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
       <div className="flex items-center space-x-2">
         <Search className="w-4 h-4 text-gray-400" />
         <Input
@@ -65,6 +93,7 @@ export default function SongTable({ songs, loading, onDelete, onAddDetails, onVi
           onChange={(e) => setSearchQuery(e.target.value)}
           className="max-w-sm"
         />
+        <SongUploadDialog open={open} setOpen={setOpen} setSuccess={setSuccess} setError={setError} />
       </div>
       <Table>
         <TableHeader>

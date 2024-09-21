@@ -7,7 +7,7 @@ import { ExtendedSong } from "@/types";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle, CheckCircle2 } from "lucide-react";
-import SongUploadDialog from "./SongUploadDialog";
+// import SongUploadDialog from "./SongUploadDialog";
 import SongTable from "./SongTable";
 import DeleteConfirmationDialog from "./DeleteConfirmationDialog";
 import AddDetailsDialog from "./AddDetailsDialog";
@@ -16,7 +16,7 @@ import ViewDetailsDialog from "./ViewDetailsDialog";
 export default function SongList() {
   const [songs, setSongs] = useState<ExtendedSong[]>([]);
   const [loading, setLoading] = useState(true);
-  const [open, setOpen] = useState(false);
+  // const [open, setOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [songToDelete, setSongToDelete] = useState<ExtendedSong | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -88,7 +88,7 @@ export default function SongList() {
     <Card className="w-full shadow-none">
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle className="text-2xl font-semibold">Set List</CardTitle>
-        <SongUploadDialog open={open} setOpen={setOpen} setSuccess={setSuccess} setError={setError} />
+        {/* <SongUploadDialog open={open} setOpen={setOpen} setSuccess={setSuccess} setError={setError} /> */}
       </CardHeader>
       <CardContent>
         {error && (

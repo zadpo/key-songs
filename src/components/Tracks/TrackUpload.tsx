@@ -8,18 +8,27 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { Calendar as CalendarIcon, Music, Link as LinkIcon, Plus } from "lucide-react";
+import { db, storage } from "@/lib/firebase";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { toast } from "@/hooks/use-toast";
+import { getDocs, collection, addDoc } from "firebase/firestore";
 
 interface TrackUploadDialogProps {
-  onUpload: (track: {
-    title: string;
-    date: Date;
-    type: "mp3" | "drive";
-    fileUrl?: string;
-    driveLink?: string;
-  }) => void;
+  onUpload: (track: Track) => void;
+}
+
+interface Track {
+  id: string;
+  title: string;
+  date: Date;
+  type: "mp3" | "drive";
+  fileUrl?: string;
+  driveLink?: string;
+  category: "Sunday Records" | "Back Tracks";
 }
 
 export function TrackUploadDialog({ onUpload }: TrackUploadDialogProps) {
@@ -29,24 +38,69 @@ export function TrackUploadDialog({ onUpload }: TrackUploadDialogProps) {
   const [uploadType, setUploadType] = useState<"mp3" | "drive">("mp3");
   const [mp3File, setMp3File] = useState<File | null>(null);
   const [driveLink, setDriveLink] = useState("");
+  const [category, setCategory] = useState<"Sunday Records" | "Back Tracks">("Sunday Records");
+  const [uploading, setUploading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const newTrack = {
-      title,
-      date: date || new Date(),
-      type: uploadType,
-      fileUrl: uploadType === "mp3" ? URL.createObjectURL(mp3File!) : undefined,
-      driveLink: uploadType === "drive" ? driveLink : undefined,
-    };
-    onUpload(newTrack);
-    // Reset form after submission
-    setTitle("");
-    setDate(undefined);
-    setUploadType("mp3");
-    setMp3File(null);
-    setDriveLink("");
-    setOpen(false);
+    if (uploading) return;
+    setUploading(true);
+    let fileUrl = "";
+
+    try {
+      if (uploadType === "mp3" && mp3File) {
+        const storageRef = ref(storage, `tracks/${mp3File.name}-${Date.now()}`);
+        await uploadBytes(storageRef, mp3File);
+        fileUrl = await getDownloadURL(storageRef);
+      }
+
+      const newTrack = {
+        title,
+        date: date || new Date(),
+        type: uploadType,
+        ...(uploadType === "mp3" && { fileUrl }),
+        ...(uploadType === "drive" && { driveLink }),
+        category,
+      };
+
+      const existingTracks = await getDocs(collection(db, "tracks"));
+      const isDuplicate = existingTracks.docs.some((doc) => doc.data().title === title);
+
+      if (isDuplicate) {
+        toast({
+          title: "Duplicate Track",
+          description: "A track with this title already exists.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const docRef = await addDoc(collection(db, "tracks"), newTrack);
+      const trackWithId = { ...newTrack, id: docRef.id };
+      onUpload(trackWithId);
+
+      toast({
+        title: "Success",
+        description: "Track uploaded successfully",
+      });
+
+      setTitle("");
+      setDate(undefined);
+      setUploadType("mp3");
+      setMp3File(null);
+      setDriveLink("");
+      setCategory("Sunday Records");
+      setOpen(false);
+    } catch (error) {
+      console.error("Error during upload:", error);
+      toast({
+        title: "Error",
+        description: "Failed to upload track. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setUploading(false);
+    }
   };
 
   return (
@@ -151,8 +205,30 @@ export function TrackUploadDialog({ onUpload }: TrackUploadDialogProps) {
             </div>
           )}
 
-          <Button type="submit" className="w-full">
-            Upload Song
+          <div className="space-y-2">
+            <Label htmlFor="category" className="text-sm font-medium">
+              Category
+            </Label>
+            <Select
+              value={category}
+              onValueChange={(value) => setCategory(value as "Sunday Records" | "Back Tracks")}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select a category" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Sunday Records">Sunday Records</SelectItem>
+                <SelectItem value="Back Tracks">Back Tracks</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={uploading || !title || !date || (!mp3File && !driveLink)}
+          >
+            {uploading ? "Uploading..." : "Upload Song"}
           </Button>
         </form>
       </DialogContent>

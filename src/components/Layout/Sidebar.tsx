@@ -8,7 +8,7 @@ export function Sidebar() {
   return (
     <div className="flex h-screen w-64 flex-col p-3 bg-white border rounded-tr-[40px]">
       <div className="flex items-center justify-center h-14 border-b">
-        <h1 className="text-xl font-semibold">Music App</h1>
+        <h1 className="text-xl font-semibold">His Life Metro Setlist</h1>
       </div>
       <nav className="flex-1 space-y-2 py-4">
         <Link
@@ -30,7 +30,7 @@ export function Sidebar() {
           className="flex items-center space-x-3 px-3 py-2 text-gray-700 hover:bg-gray-200 rounded-lg"
         >
           <Upload className="h-5 w-5" />
-          <span>Upload Song</span>
+          <span>Upload Tracks</span>
         </Link>
       </nav>
       <div>
