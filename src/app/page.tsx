@@ -28,10 +28,8 @@ export default function Home() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log("Fetching data from Firebase...");
         const songsCollection = collection(db, "songs");
         const songsSnapshot = await getDocs(songsCollection);
-        console.log("Fetched songs snapshot:", songsSnapshot);
 
         const songsData = songsSnapshot.docs.map((doc) => {
           const data = doc.data();
@@ -44,7 +42,6 @@ export default function Home() {
           } as ExtendedSong;
         });
 
-        console.log("Processed songs data:", songsData);
         setSongs(songsData);
 
         const totalSongs = songsData.length;

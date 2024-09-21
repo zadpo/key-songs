@@ -20,11 +20,9 @@ export default function Login() {
 
   const handleSubmit = (pin: string) => {
     if (login(pin)) {
-      console.log("Login successful"); // Log successful login
       router.push("/");
     } else {
       setError("Invalid PIN");
-      console.log("Invalid PIN entered"); // Log invalid PIN
     }
   };
 
