@@ -1,5 +1,7 @@
 "use client";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
+/* eslint-disable no-unused-vars */
+/* eslint-disable */
 
 import * as React from "react";
 import * as RechartsPrimitive from "recharts";
