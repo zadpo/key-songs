@@ -23,9 +23,6 @@ export function TrackDashboard() {
     recentUploads: 0,
   });
   const [recentActivity, setRecentActivity] = useState<string[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [tracks, setTracks] = useState<Track[]>([]);
 
   const [chartData, setChartData] = useState([
     { name: "Jan", total: 0 },
@@ -68,8 +65,6 @@ export function TrackDashboard() {
         });
         setRecentActivity(recentActivityList);
 
-        setTracks(fetchedTracks);
-
         const monthCounts = new Array(6).fill(0);
         fetchedTracks.forEach((track) => {
           const month = track.date.getMonth();
@@ -85,12 +80,8 @@ export function TrackDashboard() {
           { name: "May", total: monthCounts[4] },
           { name: "Jun", total: monthCounts[5] },
         ]);
-
-        setLoading(false);
       } catch (err) {
         console.error("Error fetching data:", err);
-        setError("Failed to load dashboard data. Please try again later.");
-        setLoading(false);
       }
     };
 

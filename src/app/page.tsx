@@ -9,7 +9,7 @@ import { db } from "@/lib/firebase";
 import { collection, getDocs, query, orderBy, limit } from "firebase/firestore";
 import { Skeleton } from "@/components/ui/skeleton";
 import ProtectedRoute from "@/components/ProtectedRoute";
-import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip } from "recharts";
+import { BarChart } from "recharts";
 import { TrackDashboard } from "@/components/Tracks/Dashboard";
 import { SongChart } from "@/components/Setlist/BarChart";
 import { ExtendedSong } from "@/types";
@@ -24,15 +24,6 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [songs, setSongs] = useState<ExtendedSong[]>([]);
-
-  const [chartData, setChartData] = useState([
-    { name: "Jan", songs: 0 },
-    { name: "Feb", songs: 0 },
-    { name: "Mar", songs: 0 },
-    { name: "Apr", songs: 0 },
-    { name: "May", songs: 0 },
-    { name: "Jun", songs: 0 },
-  ]);
 
   useEffect(() => {
     const fetchData = async () => {
