@@ -167,7 +167,7 @@ export function TrackDashboard() {
             />
           </div>
           <div className="!items-start !justify-start">
-            <div className="absolute left-[50px] top-[60px] z-10 text-sm font-medium">Recent</div>
+            <div className="absolute left-[50px] top-[90px] z-10 text-sm font-medium">Recent</div>
             <TooltipDemo
               label="Recent Activity"
               hideLabel
@@ -185,7 +185,7 @@ export function TrackDashboard() {
               height="34"
               fill="none"
               viewBox="0 0 75 175"
-              className="absolute left-[30px] top-[38px] z-10 rotate-[-40deg]"
+              className="absolute left-[30px] top-[70px] z-10 rotate-[-40deg]"
             >
               <g clipPath="url(#abc)">
                 <path
