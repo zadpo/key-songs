@@ -32,6 +32,13 @@ export function Sidebar() {
           <Upload className="h-5 w-5" />
           <span>Upload Tracks</span>
         </Link>
+        <Link
+          href="/chords"
+          className="flex items-center space-x-3 px-3 py-2 text-gray-700 hover:bg-gray-200 rounded-lg"
+        >
+          <Upload className="h-5 w-5" />
+          <span>Chords</span>
+        </Link>
       </nav>
       <div>
         <Button onClick={logout} className="w-full">
